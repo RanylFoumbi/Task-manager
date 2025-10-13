@@ -42,7 +42,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'tasks.apps.TasksConfig',
+    'drf_spectacular',
+    'apps.users',
+    'apps.projects',
+    'apps.tasks',
 ]
 
 MIDDLEWARE = [
@@ -76,8 +79,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'task_manager.wsgi.application'
 
 
-REST_FRAMEWORK = {}
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Task Manager API',
+    'DESCRIPTION': 'API for managing tasks and projects',
+    'VERSION': '1.0.0',
+}
 
 
 # Database
@@ -137,4 +147,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'tasks.User'
+AUTH_USER_MODEL = 'users.User'

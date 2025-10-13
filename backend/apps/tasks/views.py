@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Task
-from .serializers import TaskSerializer
+from apps.serializers import TaskSerializer
 
 class TaskView(APIView):
     serializer_class = TaskSerializer
@@ -10,4 +10,5 @@ class TaskView(APIView):
         tasks = Task.objects.all()
         serializer = self.serializer_class(tasks, many=True)
         return Response(serializer.data)
+    
 
