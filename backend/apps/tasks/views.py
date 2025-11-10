@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Task
-from apps.serializers import TaskSerializer
+from ..serializers import TaskSerializer
 
 class TaskView(APIView):
     serializer_class = TaskSerializer

@@ -2,16 +2,11 @@ from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework.validators import UniqueValidator
+from .users.models import User
 from .projects.models import Project
 from .tasks.models import Task, Comment
-from .users.models import User
+from .users.serializers import PublicUserSerializer
 
-    
-class UserSerializer(ModelSerializer):
-    class Meta:
-        model = User
-        fields = '__all__'
-        read_only_fields = ('id', 'email', 'first_name', 'last_name')
 
 class ProjectSerializer(ModelSerializer):
     class Meta:
@@ -27,7 +22,7 @@ class TaskSerializer(ModelSerializer):
         read_only_fields = ('id', 'created_at', 'updated_at')
 
 class CommentSerializer(ModelSerializer):
-    author = UserSerializer(read_only=True)
+    author = PublicUserSerializer(read_only=True)
 
     class Meta:
         model = Comment
@@ -76,7 +71,7 @@ class ProjectCreateUpdateSerializer(ModelSerializer):
         }
 
 class ProjectDetailSerializer(ModelSerializer):
-    creator = UserSerializer(read_only=True)
+    creator = PublicUserSerializer(read_only=True)
     tasks = TaskSerializer(many=True, read_only=True)
 
     class Meta:
@@ -89,7 +84,7 @@ class ProjectDetailSerializer(ModelSerializer):
         }
 
 class TaskDetailSerializer(ModelSerializer):
-    creator = UserSerializer(read_only=True)
+    creator = PublicUserSerializer(read_only=True)
     project = ProjectSerializer(read_only=True)
 
     class Meta:

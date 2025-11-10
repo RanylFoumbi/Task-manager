@@ -35,6 +35,7 @@ class User(AbstractBaseUser):
     user_permissions = models.ManyToManyField('auth.Permission', related_name='custom_user_set', blank=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
+    email_verified = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
