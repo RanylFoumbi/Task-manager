@@ -1,5 +1,4 @@
 import datetime
-
 from rest_framework import status
 from django.conf import settings
 from django.core.mail import send_mail
@@ -8,11 +7,16 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework.generics import CreateAPIView
 from django.utils.encoding import force_bytes, force_str
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from rest_framework.exceptions import ValidationError
+from apps.utils.custom_response import CustomResponse
+from apps.utils.error_code import ErrorCode
 from ..models import User
-
 from ..serializers import (
     LoginSerializer,
     RegisterSerializer,
@@ -20,6 +24,20 @@ from ..serializers import (
     PasswordResetRequestSerializer,
     PasswordResetConfirmSerializer
 )
+
+
+class PublicTokenRefreshView(TokenRefreshView):
+    permission_classes = [AllowAny]
+    serializer_class = TokenRefreshSerializer
+
+    def post(self, request, *args, **kwargs):
+        try:
+            return super().post(request, *args, **kwargs)
+        except (InvalidToken, TokenError, ValidationError):
+            return CustomResponse.bad_request(
+                message='Token invalide ou expiré',
+                code=ErrorCode.TOKEN_EXPIRED_OR_INVALID
+            )
 
 
 class RegisterView(CreateAPIView):
@@ -32,13 +50,16 @@ class RegisterView(CreateAPIView):
         user = serializer.save()
 
         if not user:
-            return Response({
-                'error': 'Échec de l\'inscription de l\'utilisateur'
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return CustomResponse.bad_request(
+                message="Échec de l'inscription",
+                code=ErrorCode.REGISTRATION_FAILED,
+            )
 
-        return Response({
-            'message': 'User registered successfully',
-        }, status=status.HTTP_201_CREATED)
+        return CustomResponse.success(
+            message="Inscription réussie",
+            code=ErrorCode.REGISTRATION_SUCCESS,
+            data=PublicUserSerializer(user).data,
+        )
 
 
 class LoginView(APIView):
@@ -56,12 +77,16 @@ class LoginView(APIView):
         refresh = RefreshToken.for_user(user)
         user_data = PublicUserSerializer(user).data
 
-        return Response({
-            'message': 'Connexion réussie',
-            'access': str(refresh.access_token),
-            'refresh': str(refresh),
-            'user': user_data
-        }, status=status.HTTP_200_OK)
+
+        return CustomResponse.success(
+            message="Connexion réussie",
+            code=ErrorCode.LOGIN_SUCCESS,
+            data={
+                'user': user_data,
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            }
+        )
 
 
 class PasswordResetRequestView(APIView):
@@ -75,11 +100,9 @@ class PasswordResetRequestView(APIView):
         email = serializer.validated_data['email']
         user = User.objects.get(email=email)
 
-        # Generate reset token
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
 
-        # Send email (configure your email backend)
         reset_url = f"{settings.FRONTEND_URL}/reset-password/{uid}/{token}/"
 
         try:
@@ -92,13 +115,15 @@ class PasswordResetRequestView(APIView):
             )
         except Exception as e:
             print('>>>>>> Email sending error:', e)
-            return Response({
-                'error': "Échec de l\'envoi de l\'email de réinitialisation"
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return CustomResponse.server_error(
+                message="Erreur lors de l\'envoi de l\'email de réinitialisation",
+                code=ErrorCode.PASSWORD_RESET_FAILED
+            )
 
-        return Response({
-            'message': 'Mot de passe réinitialisé email envoyé'
-        }, status=status.HTTP_200_OK)
+        return CustomResponse.success(
+            message="Email de réinitialisation envoyé avec succès",
+            code=ErrorCode.PASSWORD_RESET_SUCCESS
+        )
 
 
 class PasswordResetConfirmView(APIView):
@@ -110,14 +135,16 @@ class PasswordResetConfirmView(APIView):
             uid = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-            return Response({
-                'error': 'Lien de réinitialisation invalide'
-            }, status=status.HTTP_400_BAD_REQUEST)
+            return CustomResponse.bad_request(
+                message='Lien de réinitialisation invalide',
+                code=ErrorCode.INVALID_RESET_LINK
+            )
 
         if not default_token_generator.check_token(user, token):
-            return Response({
-                'error': 'Token de réinitialisation invalide ou expiré'
-            }, status=status.HTTP_400_BAD_REQUEST)
+            return CustomResponse.bad_request(
+                message='Token de réinitialisation invalide ou expiré',
+                code=ErrorCode.TOKEN_EXPIRED_OR_INVALID
+            )
 
         serializer = PasswordResetConfirmSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -125,7 +152,8 @@ class PasswordResetConfirmView(APIView):
         user.set_password(serializer.validated_data['new_password'])
         user.save()
 
-        return Response({
-            'message': 'Mot de passe réinitialisé avec succès'
-        }, status=status.HTTP_200_OK)
+        return CustomResponse.success(
+            message="Mot de passe réinitialisé avec succès",
+            code=ErrorCode.PASSWORD_RESET_SUCCESS
+        )
 

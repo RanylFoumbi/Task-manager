@@ -1,6 +1,8 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
 from .models import User
+from ..utils.error_code import ErrorCode
+from ..utils.custom_response import CustomResponse
 
 
 class PublicUserSerializer(ModelSerializer):
@@ -9,7 +11,6 @@ class PublicUserSerializer(ModelSerializer):
         model = User
         fields = ['id', 'email', 'first_name', 'last_name', 'last_login']
         read_only_fields = ['id', 'email', 'first_name', 'last_name', 'last_login']
-
 
 class RegisterSerializer(ModelSerializer):
     email = serializers.EmailField(required=True)
@@ -29,10 +30,16 @@ class RegisterSerializer(ModelSerializer):
 
     def validate(self, attrs):
         if attrs['email'].lower() in [user.email.lower() for user in User.objects.all()]:
-            raise serializers.ValidationError('Un utilisateur avec cet email existe déjà')
+            raise CustomResponse.bad_request(
+                message='Email déjà utilisé',
+                code=ErrorCode.EMAIL_ALREADY_EXISTS
+            )
 
         if attrs['password'] != attrs['confirm_password']:
-            raise serializers.ValidationError('Les mots de passe ne correspondent pas')
+            raise CustomResponse.bad_request(
+                message='Les mots de passe ne correspondent pas',
+                code=ErrorCode.CONFIRM_PASSWORD_NOT_MATCH
+            )
         return attrs
 
     def create(self, validated_data):
@@ -52,16 +59,24 @@ class LoginSerializer(serializers.Serializer):
         password = attrs.get('password')
 
         if not email or not password:
-            raise serializers.ValidationError('email et mot de passe sont requis')
-
+            raise CustomResponse.bad_request(
+                message='Email et mot de passe sont requis',
+                code=ErrorCode.INVALID_CREDENTIALS,
+            )
 
         user = authenticate(username=email, password=password)
 
         if user is None:
-            raise serializers.ValidationError('email ou mot de passe incorrect')
+            raise CustomResponse.bad_request(
+                message='Utilisateur non trouvé',
+                code=ErrorCode.USER_NOT_FOUND
+            )
 
         if not user.is_active:
-            raise serializers.ValidationError('Compte utilisateur désactivé')
+            raise CustomResponse.bad_request(
+                message='Utilisateur inactif',
+                code=ErrorCode.USER_INACTIVE,
+            )
 
         attrs['user'] = user
         return attrs
@@ -74,7 +89,10 @@ class PasswordResetRequestSerializer(serializers.Serializer):
         try:
             User.objects.get(email=value)
         except User.DoesNotExist:
-            raise serializers.ValidationError('Aucun utilisateur trouvé avec cet email')
+            raise CustomResponse.bad_request(
+                message='Aucun utilisateur trouvé avec cet email',
+                code=ErrorCode.USER_NOT_FOUND
+            )
         return value
 
 
@@ -85,5 +103,8 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         if attrs['new_password'] != attrs['confirm_password']:
-            raise serializers.ValidationError('Les mots de passe ne correspondent pas')
+            raise CustomResponse.bad_request(
+                message='Les mots de passe ne correspondent pas',
+                code=ErrorCode.CONFIRM_PASSWORD_NOT_MATCH
+            )
         return attrs
