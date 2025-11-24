@@ -11,6 +11,7 @@ A modern full-stack task management application built with Django REST Framework
 - **django-admin-interface** - Modern admin styling
 - **django-cors-headers** - CORS handling
 
+
 ### Frontend
 - **React 19** - UI library
 - **TypeScript** - Static typing for components and APIs
