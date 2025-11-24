@@ -1,6 +1,6 @@
 # 📋 Task Manager
 
-A modern full-stack task management application built with Django REST Framework, PostgreSQL, Vue.js 3, TypeScript, and Pinia.
+A modern full-stack task management application built with Django REST Framework, PostgreSQL, React, TypeScript, and Zustand.
 
 ## 🚀 Tech Stack
 
