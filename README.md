@@ -12,11 +12,17 @@ A modern full-stack task management application built with Django REST Framework
 - **django-cors-headers** - CORS handling
 
 ### Frontend
-- **Vue.js 3** - Progressive JavaScript framework
-- **TypeScript** - Type-safe JavaScript
-- **Pinia** - State management
-- **Vite** - Build tool and dev server
-- **Tailwind CSS** - Utility-first CSS framework
+- **React 19** - UI library
+- **TypeScript** - Static typing for components and APIs
+- **Vite** - Fast dev server and build tool
+- **React Router** - Client-side routing
+- **Tailwind CSS** - Utility-first styling
+- **Axios** (or Fetch) - HTTP client for API calls
+- **TanStack Query (React Query)** - Server-state management & caching
+- **Zustand** - Global state where needed
+- **ESLint & Prettier** - Linting and formatting
+- **Jest & React Testing Library** - Unit and integration testing
+- Accessibility-first and responsive design best practices
 
 ### DevOps
 - **Docker & Docker Compose** - Containerization
