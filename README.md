@@ -37,7 +37,6 @@ A modern full-stack task management application built with Django REST Framework
 - Dashboard dynamique avec statistiques.
 - Interface responsive et moderne.
 - Filtrage et recherche avancée.
-- Gestion d’état globale avec Pinia (Vue.js).
 
 ## 📁 Project Structure
 
