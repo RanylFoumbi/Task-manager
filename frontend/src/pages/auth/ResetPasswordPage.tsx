@@ -2,16 +2,11 @@ import { Label } from "@radix-ui/react-label";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  CardContent,
   Input,
   Button,
 } from "../../components/ui";
 import { Loader } from "lucide-react";
+import { BackgroundBeamsWithCollision } from "../../components/ui/background-beams-with-collision";
 
 export default function ResetPasswordPage() {
   const [email, setEmail] = useState("");
@@ -44,18 +39,15 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-lg border-border card-hover bg-card">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">
-            Reset Your Password
-          </CardTitle>
-          <CardDescription>Enter your new password below</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+    <BackgroundBeamsWithCollision className="min-h-screen w-full flex items-center justify-center p-4">
+      <div className="w-full max-w-lg relative z-10 space-y-6">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold text-slate-900">Reset Your Password</h1>
+          <p className="text-slate-700">Enter your new password below</p>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-slate-900">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -71,7 +63,7 @@ export default function ResetPasswordPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">New Password</Label>
+              <Label htmlFor="password" className="text-slate-900">New Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -87,7 +79,7 @@ export default function ResetPasswordPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirm-password">Confirm New Password</Label>
+              <Label htmlFor="confirm-password" className="text-slate-900">Confirm New Password</Label>
               <Input
                 id="confirm-password"
                 type="password"
@@ -114,16 +106,14 @@ export default function ResetPasswordPage() {
               )}
             </Button>
           </form>
-        </CardContent>
-        <CardFooter className="flex flex-col space-y-4">
-          <div className="text-center text-sm text-muted-foreground">
+
+          <div className="text-center text-sm text-slate-700">
             You remembered your password?{" "}
-            <Link to="/login" className="text-primary hover:underline">
+            <Link to="/login" className="text-slate-900 hover:underline">
               Sign in
             </Link>
           </div>
-        </CardFooter>
-      </Card>
-    </div>
+        </div>
+      </BackgroundBeamsWithCollision>
   );
 }

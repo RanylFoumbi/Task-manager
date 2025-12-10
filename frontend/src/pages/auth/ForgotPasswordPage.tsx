@@ -2,16 +2,11 @@ import { Label } from "@radix-ui/react-label";
 import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  CardContent,
   Button,
   Input,
 } from "../../components/ui";
 import { Loader } from "lucide-react";
+import { BackgroundBeamsWithCollision } from "../../components/ui/background-beams-with-collision";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -29,20 +24,15 @@ export default function ForgotPasswordPage() {
   }, [email]);
 
   return (
-    <div className="flex h-screen items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-lg border-border card-hover bg-card">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">
-            You forgot your password?
-          </CardTitle>
-          <CardDescription>
-            Enter your email to reset your password
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+    <BackgroundBeamsWithCollision className="min-h-screen w-full flex items-center justify-center p-4">
+      <div className="w-full max-w-lg relative z-10 space-y-6">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold text-slate-900">You forgot your password?</h1>
+          <p className="text-slate-700">Enter your email to reset your password</p>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-slate-900">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -65,16 +55,14 @@ export default function ForgotPasswordPage() {
               )}
             </Button>
           </form>
-        </CardContent>
-        <CardFooter className="flex flex-col space-y-4">
-          <div className="text-center text-sm text-muted-foreground">
+
+          <div className="text-center text-sm text-slate-700">
             You remembered your password?{" "}
-            <Link to="/login" className="text-primary hover:underline">
+            <Link to="/login" className="text-slate-900 hover:underline">
               Sign in
             </Link>
           </div>
-        </CardFooter>
-      </Card>
-    </div>
+        </div>
+      </BackgroundBeamsWithCollision>
   );
 }
