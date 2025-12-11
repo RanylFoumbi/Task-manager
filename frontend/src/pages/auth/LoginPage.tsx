@@ -1,12 +1,8 @@
 import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import { Loader } from "lucide-react";
-import {
-  Input,
-  Button,
-  Label,
-} from "../../components/ui";
-import { BackgroundBeamsWithCollision } from "../../components/ui/background-beams-with-collision";
+import { Input, Button, Label } from "@/components/ui";
+import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -29,12 +25,16 @@ export default function LoginPage() {
       <div className="w-full max-w-md relative z-10 space-y-6">
         <div className="space-y-2">
           <h1 className="text-3xl font-bold text-black">Welcome back!</h1>
-          <p className="text-black/80">Enter your credentials to access your account</p>
+          <p className="text-black/80">
+            Enter your credentials to access your account
+          </p>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-black">Email</Label>
+            <Label htmlFor="email" className="text-black">
+              Email
+            </Label>
             <Input
               id="email"
               type="email"
@@ -51,7 +51,9 @@ export default function LoginPage() {
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="password" className="text-black">Password</Label>
+              <Label htmlFor="password" className="text-black">
+                Password
+              </Label>
               <Link
                 to="/forgot-password"
                 className="text-sm text-black hover:underline"
@@ -95,7 +97,11 @@ export default function LoginPage() {
               <span className="px-2 text-black/60">Or continue with</span>
             </div>
           </div>
-          <Button variant="outline" className="w-full text-black border-black/20 hover:bg-black/10" type="button">
+          <Button
+            variant="outline"
+            className="w-full text-black border-black/20 hover:bg-black/10"
+            type="button"
+          >
             <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
               <path
                 fill="currentColor"

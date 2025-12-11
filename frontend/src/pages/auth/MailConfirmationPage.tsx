@@ -1,6 +1,6 @@
 import { Send } from "lucide-react";
-import { Button } from "../../components/ui";
-import { BackgroundBeamsWithCollision } from "../../components/ui/background-beams-with-collision";
+import { Button } from "@/components/ui";
+import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
 
 export default function MailConfirmationPage() {
   return (

@@ -15,7 +15,9 @@ function App() {
         <main className="flex-1 overflow-y-auto p-6">
           <div className="mb-6">
             <h1 className="text-3xl font-bold text-slate-900">Hello!</h1>
-            <p className="text-slate-600 mt-1">Welcome back! Here's what's happening today.</p>
+            <p className="text-slate-600 mt-1">
+              Welcome back! Here's what's happening today.
+            </p>
           </div>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7 mb-6">

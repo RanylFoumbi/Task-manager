@@ -1,13 +1,8 @@
 import { Link } from "react-router-dom";
-import {
-  Button,
-  Checkbox,
-  Input,
-  Label,
-} from "../../components/ui";
+import { Button, Checkbox, Input, Label } from "@/components/ui";
 import { useCallback, useState } from "react";
 import { Loader } from "lucide-react";
-import { BackgroundBeamsWithCollision } from "../../components/ui/background-beams-with-collision";
+import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -47,13 +42,17 @@ export default function RegisterPage() {
     <BackgroundBeamsWithCollision className="min-h-screen w-full flex items-center justify-center p-4">
       <div className="w-full max-w-md relative z-10 space-y-6">
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-slate-900">Create an account</h1>
+          <h1 className="text-3xl font-bold text-slate-900">
+            Create an account
+          </h1>
           <p className="text-slate-700">Enter your details to get started</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-slate-900">Email</Label>
+            <Label htmlFor="email" className="text-slate-900">
+              Email
+            </Label>
             <Input
               id="email"
               type="email"
@@ -70,7 +69,9 @@ export default function RegisterPage() {
           </div>
           <div className="space-y-2 mb-2 flex flex-row gap-4">
             <div className="w-1/2">
-              <Label htmlFor="first_name" className="text-slate-900">First Name(Optional)</Label>
+              <Label htmlFor="first_name" className="text-slate-900">
+                First Name(Optional)
+              </Label>
               <Input
                 id="first_name"
                 type="text"
@@ -81,7 +82,9 @@ export default function RegisterPage() {
               />
             </div>
             <div className="w-1/2">
-              <Label htmlFor="last_name" className="text-slate-900">Last Name(Optional)</Label>
+              <Label htmlFor="last_name" className="text-slate-900">
+                Last Name(Optional)
+              </Label>
               <Input
                 id="last_name"
                 type="text"
@@ -93,7 +96,9 @@ export default function RegisterPage() {
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-slate-900">Password</Label>
+            <Label htmlFor="password" className="text-slate-900">
+              Password
+            </Label>
             <Input
               id="password"
               type="password"
@@ -109,7 +114,9 @@ export default function RegisterPage() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="confirm-password" className="text-slate-900">Confirm Password</Label>
+            <Label htmlFor="confirm-password" className="text-slate-900">
+              Confirm Password
+            </Label>
             <Input
               id="confirm-password"
               type="password"
@@ -129,9 +136,7 @@ export default function RegisterPage() {
               id="terms"
               checked={acceptTerms}
               disabled={isLoading}
-              onCheckedChange={(checked) =>
-                setAcceptTerms(checked === true)
-              }
+              onCheckedChange={(checked) => setAcceptTerms(checked === true)}
             />
             <label
               htmlFor="terms"
@@ -165,7 +170,11 @@ export default function RegisterPage() {
               <span className="px-2 text-slate-700">Or continue with</span>
             </div>
           </div>
-          <Button variant="outline" className="w-full text-slate-900 border-slate-300 hover:bg-slate-100" type="button">
+          <Button
+            variant="outline"
+            className="w-full text-slate-900 border-slate-300 hover:bg-slate-100"
+            type="button"
+          >
             <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
               <path
                 fill="currentColor"
