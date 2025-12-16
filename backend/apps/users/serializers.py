@@ -28,18 +28,22 @@ class RegisterSerializer(ModelSerializer):
             'username': {'required': False, 'allow_blank': True},
         }
 
-    def validate(self, attrs):
-        if attrs['email'].lower() in [user.email.lower() for user in User.objects.all()]:
-            raise CustomResponse.bad_request(
-                message='Email déjà utilisé',
-                code=ErrorCode.EMAIL_ALREADY_EXISTS
-            )
+    def validate_email(self, value):
+        """Valider l'unicité de l'email"""
+        if User.objects.filter(email__iexact=value).exists():
+            raise serializers.ValidationError({
+                'code': ErrorCode.EMAIL_ALREADY_EXISTS,
+                'message': 'Email déjà utilisé'
+            })
+        return value
 
+    def validate(self, attrs):
+        """Valider que les mots de passe correspondent"""
         if attrs['password'] != attrs['confirm_password']:
-            raise CustomResponse.bad_request(
-                message='Les mots de passe ne correspondent pas',
-                code=ErrorCode.CONFIRM_PASSWORD_NOT_MATCH
-            )
+            raise serializers.ValidationError({
+                'code': ErrorCode.CONFIRM_PASSWORD_NOT_MATCH,
+                'message': 'Les mots de passe ne correspondent pas'
+            })
         return attrs
 
     def create(self, validated_data):
@@ -59,24 +63,24 @@ class LoginSerializer(serializers.Serializer):
         password = attrs.get('password')
 
         if not email or not password:
-            raise CustomResponse.bad_request(
-                message='Email et mot de passe sont requis',
-                code=ErrorCode.INVALID_CREDENTIALS,
-            )
+            raise serializers.ValidationError({
+                'code': ErrorCode.INVALID_CREDENTIALS,
+                'message': 'Email et mot de passe sont requis'
+            })
 
         user = authenticate(username=email, password=password)
 
         if user is None:
-            raise CustomResponse.bad_request(
-                message='Utilisateur non trouvé',
-                code=ErrorCode.USER_NOT_FOUND
-            )
+            raise serializers.ValidationError({
+                'code': ErrorCode.INVALID_CREDENTIALS,
+                'message': 'Email ou mot de passe incorrect'
+            })
 
         if not user.is_active:
-            raise CustomResponse.bad_request(
-                message='Utilisateur inactif',
-                code=ErrorCode.USER_INACTIVE,
-            )
+            raise serializers.ValidationError({
+                'code': ErrorCode.USER_INACTIVE,
+                'message': 'Compte inactif'
+            })
 
         attrs['user'] = user
         return attrs
@@ -86,13 +90,14 @@ class PasswordResetRequestSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
 
     def validate_email(self, value):
+        """Vérifier que l'utilisateur existe"""
         try:
             User.objects.get(email=value)
         except User.DoesNotExist:
-            raise CustomResponse.bad_request(
-                message='Aucun utilisateur trouvé avec cet email',
-                code=ErrorCode.USER_NOT_FOUND
-            )
+            raise serializers.ValidationError({
+                'code': ErrorCode.USER_NOT_FOUND,
+                'message': 'Aucun utilisateur trouvé avec cet email'
+            })
         return value
 
 
@@ -102,9 +107,10 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
     confirm_password = serializers.CharField(write_only=True, required=True)
 
     def validate(self, attrs):
+        """Valider que les mots de passe correspondent"""
         if attrs['new_password'] != attrs['confirm_password']:
-            raise CustomResponse.bad_request(
-                message='Les mots de passe ne correspondent pas',
-                code=ErrorCode.CONFIRM_PASSWORD_NOT_MATCH
-            )
+            raise serializers.ValidationError({
+                'code': ErrorCode.CONFIRM_PASSWORD_NOT_MATCH,
+                'message': 'Les mots de passe ne correspondent pas'
+            })
         return attrs
