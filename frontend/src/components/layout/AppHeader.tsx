@@ -21,10 +21,7 @@ export type AppHeaderProps = {
 };
 
 export default function AppHeader({ onToggleSidebar }: AppHeaderProps) {
-
-  const logout = async () => {
-    
-  };
+  const logout = async () => {};
 
   return (
     <header className="bg-white border-b border-slate-200 h-12">
@@ -62,7 +59,10 @@ export default function AppHeader({ onToggleSidebar }: AppHeaderProps) {
                 </DropdownMenuItem>
               ))}
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={logout} className="flex justify-between">
+              <DropdownMenuItem
+                onClick={logout}
+                className="flex justify-between"
+              >
                 Logout <LogOut className="ml-2 h-4 w-4" />
               </DropdownMenuItem>
             </DropdownMenuContent>
