@@ -24,6 +24,7 @@ from ..serializers import (
     PasswordResetRequestSerializer,
     PasswordResetConfirmSerializer
 )
+from apps.users import serializers
 
 
 class PublicTokenRefreshView(TokenRefreshView):
@@ -46,7 +47,8 @@ class RegisterView(CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         serializer = RegisterSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        serializer.is_valid(raise_exception=True) 
+        
         user = serializer.save()
 
         if not user:
@@ -55,7 +57,7 @@ class RegisterView(CreateAPIView):
                 code=ErrorCode.REGISTRATION_FAILED,
             )
 
-        return CustomResponse.success(
+        return CustomResponse.created(
             message="Inscription réussie",
             code=ErrorCode.REGISTRATION_SUCCESS,
             data=PublicUserSerializer(user).data,
@@ -68,7 +70,7 @@ class LoginView(APIView):
 
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        serializer.is_valid(raise_exception=True) 
 
         user = serializer.validated_data['user']
         user.last_login = datetime.datetime.now()
@@ -76,7 +78,6 @@ class LoginView(APIView):
 
         refresh = RefreshToken.for_user(user)
         user_data = PublicUserSerializer(user).data
-
 
         return CustomResponse.success(
             message="Connexion réussie",
@@ -107,7 +108,7 @@ class PasswordResetRequestView(APIView):
 
         try:
             send_mail(
-                'Mot de passe réinitialisé',
+                'Réinitialisation de mot de passe',
                 f'Cliquez sur le lien suivant pour réinitialiser votre mot de passe : {reset_url}',
                 settings.DEFAULT_FROM_EMAIL,
                 [email],
@@ -116,7 +117,7 @@ class PasswordResetRequestView(APIView):
         except Exception as e:
             print('>>>>>> Email sending error:', e)
             return CustomResponse.server_error(
-                message="Erreur lors de l\'envoi de l\'email de réinitialisation",
+                message="Erreur lors de l'envoi de l'email de réinitialisation",
                 code=ErrorCode.PASSWORD_RESET_FAILED
             )
 
@@ -156,4 +157,3 @@ class PasswordResetConfirmView(APIView):
             message="Mot de passe réinitialisé avec succès",
             code=ErrorCode.PASSWORD_RESET_SUCCESS
         )
-
