@@ -3,29 +3,32 @@ import { Button, Checkbox, Input, Label } from "@/components/ui";
 import { useCallback, useState } from "react";
 import { Loader } from "lucide-react";
 import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function RegisterPage() {
+  const { register, isLoading, error } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [lastName, setLastName] = useState("");
   const [firstName, setFirstName] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    console.log("Register attempt with:", {
-      email,
-      password,
-      firstName,
-      lastName,
-    });
-    setIsLoading(false);
     if (password !== confirmPassword) {
       console.log("Passwords don't match");
       return;
+    }
+    register({
+      email,
+      password,
+      username: firstName,
+      confirm_password: confirmPassword,
+    });
+
+    if (error) {
+      console.log("Registration error:", error);
     }
   };
 
