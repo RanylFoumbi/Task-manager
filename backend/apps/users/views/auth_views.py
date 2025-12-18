@@ -1,5 +1,4 @@
 import datetime
-from rest_framework import status
 from django.conf import settings
 from django.core.mail import send_mail
 from rest_framework.views import APIView
@@ -14,6 +13,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework.exceptions import ValidationError
+from drf_spectacular.utils import extend_schema
 from apps.utils.custom_response import CustomResponse
 from apps.utils.error_code import ErrorCode
 from ..models import User
@@ -24,8 +24,6 @@ from ..serializers import (
     PasswordResetRequestSerializer,
     PasswordResetConfirmSerializer
 )
-from apps.users import serializers
-
 
 class PublicTokenRefreshView(TokenRefreshView):
     permission_classes = [AllowAny]
@@ -40,12 +38,11 @@ class PublicTokenRefreshView(TokenRefreshView):
                 code=ErrorCode.TOKEN_EXPIRED_OR_INVALID
             )
 
-
 class RegisterView(CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = RegisterSerializer
 
-    def create(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True) 
         
@@ -59,10 +56,8 @@ class RegisterView(CreateAPIView):
 
         return CustomResponse.created(
             message="Inscription réussie",
-            code=ErrorCode.REGISTRATION_SUCCESS,
-            data=PublicUserSerializer(user).data,
+            code=ErrorCode.REGISTRATION_SUCCESS
         )
-
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
@@ -125,7 +120,6 @@ class PasswordResetRequestView(APIView):
             message="Email de réinitialisation envoyé avec succès",
             code=ErrorCode.PASSWORD_RESET_SUCCESS
         )
-
 
 class PasswordResetConfirmView(APIView):
     permission_classes = [AllowAny]

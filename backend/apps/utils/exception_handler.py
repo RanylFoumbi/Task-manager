@@ -3,6 +3,7 @@ from rest_framework.exceptions import ValidationError
 from django.core.exceptions import ObjectDoesNotExist
 from apps.utils.custom_response import CustomResponse
 from apps.utils.error_code import ErrorCode
+import json
 
 
 def custom_exception_handler(exc, context):
@@ -13,36 +14,45 @@ def custom_exception_handler(exc, context):
     if isinstance(exc, ValidationError):
         error_detail = exc.detail
         
-        # Extraire code et message si présents
-        if isinstance(error_detail, dict):
-            code = error_detail.get('code', ErrorCode.BAD_REQUEST)
-            message = error_detail.get('message')
-            
-            # Si message n'existe pas, prendre la première erreur
-            if not message:
-                for field, errors in error_detail.items():
-                    if field not in ['code', 'message']:
-                        if isinstance(errors, list):
-                            message = errors[0]
-                        else:
-                            message = str(errors)
+        code = ErrorCode.BAD_REQUEST
+        message_array = []
+        code_found = False
+        
+        if hasattr(exc, 'get_codes'):
+            codes = exc.get_codes()
+            if isinstance(codes, dict):
+                for field, field_codes in codes.items():
+                    if isinstance(field_codes, list):
+                        for field_code in field_codes:
+                            if field_code != 'invalid':
+                                code = field_code
+                                code_found = True
+                                break
+                    else:
+                        if field_codes != 'invalid':
+                            code = field_codes
+                            code_found = True
+                    if code_found:
                         break
-                
-                if not message:
-                    message = 'Données invalides'
+        
+        if isinstance(error_detail, dict):
+            for field, errors in error_detail.items():
+                if isinstance(errors, list):
+                    for error in errors:
+                        message_array.append(str(error))
+                else:
+                    message_array.append(str(errors))
+        elif isinstance(error_detail, list):
+            for error in error_detail:
+                message_array.append(str(error))
         else:
-            code = ErrorCode.BAD_REQUEST
-            if isinstance(error_detail, list):
-                message = error_detail[0] if error_detail else 'Données invalides'
-            else:
-                message = str(error_detail)
+            message_array.append(str(error_detail))
         
         return CustomResponse.bad_request(
-            message=message,
+            message=message_array,
             code=code
         )
     
-    # Gérer ObjectDoesNotExist
     if isinstance(exc, ObjectDoesNotExist):
         return CustomResponse.not_found(
             message='Ressource non trouvée',

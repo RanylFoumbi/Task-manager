@@ -27,6 +27,8 @@ class ErrorCode:
     REGISTRATION_FAILED = 'RegistrationFailed'
     INVALID_CREDENTIALS = 'InvalidCredentials'
     EMAIL_ALREADY_EXISTS = 'EmailAlreadyExists'
+    INVALID_EMAIL_FORMAT = 'InvalidEmailFormat'
+    PASSWORD_TOO_SHORT = 'PasswordTooShort'
     REGISTRATION_SUCCESS = 'RegistrationSuccess'
     PASSWORD_RESET_FAILED = 'PasswordResetFailed'
     PASSWORD_RESET_SUCCESS = 'PasswordResetSuccess'

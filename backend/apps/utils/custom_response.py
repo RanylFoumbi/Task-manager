@@ -53,6 +53,7 @@ class CustomResponse:
         return CustomResponse._build_response(
             success=True,
             code=code,
+            
             message=message,
             data=data,
             status_code=status.HTTP_200_OK
