@@ -56,7 +56,7 @@ export const Toast = ({
       <div className="p-4">
         <div className="flex items-start">
           {icons[variant] && (
-            <div className="flex-shrink-0">{icons[variant]}</div>
+            <div className="shrink-0">{icons[variant]}</div>
           )}
           <div className={`${icons[variant] ? "ml-3" : ""} flex-1`}>
             {title && (
@@ -73,7 +73,7 @@ export const Toast = ({
               setIsVisible(false);
               onClose?.();
             }}
-            className="ml-4 flex-shrink-0 rounded-md hover:opacity-70 focus:outline-none focus:ring-2 focus:ring-ring"
+            className="ml-4 shrink-0 rounded-md hover:opacity-70 focus:outline-none focus:ring-2 focus:ring-ring"
           >
             <X className="h-4 w-4" />
           </button>

@@ -6,7 +6,7 @@ interface ProgressProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export const Progress = forwardRef<HTMLDivElement, ProgressProps>(
-  ({ className = "", value = 0, max = 100, ...props }, ref) => {
+  function Progress({ className = "", value = 0, max = 100, ...props }, ref) {
     const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
 
     return (

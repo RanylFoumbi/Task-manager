@@ -7,7 +7,7 @@ interface AvatarProps extends ImgHTMLAttributes<HTMLImageElement> {
 }
 
 export const Avatar = forwardRef<HTMLImageElement, AvatarProps>(
-  ({ className = "", fallback, size = "md", src, alt, ...props }, ref) => {
+  function Avatar({ className = "", fallback, size = "md", src, alt, ...props }, ref) {
     const [error, setError] = useState(false);
 
     const sizes = {

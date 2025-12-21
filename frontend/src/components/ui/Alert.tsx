@@ -6,7 +6,7 @@ interface AlertProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export const Alert = forwardRef<HTMLDivElement, AlertProps>(
-  ({ className = "", variant = "default", children, ...props }, ref) => {
+  function Alert({ className = "", variant = "default", children, ...props }, ref) {
     const variants = {
       default: "bg-muted text-foreground border-border",
       success: "bg-success/10 text-success border-success/20",
@@ -41,17 +41,21 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(
 export const AlertTitle = forwardRef<
   HTMLHeadingElement,
   HTMLAttributes<HTMLHeadingElement>
->(({ className = "", ...props }, ref) => (
-  <h5
-    ref={ref}
-    className={`mb-1 font-medium leading-none tracking-tight ${className}`}
-    {...props}
-  />
-));
+>(function AlertTitle({ className = "", ...props }, ref) {
+  return (
+    <h5
+      ref={ref}
+      className={`mb-1 font-medium leading-none tracking-tight ${className}`}
+      {...props}
+    />
+  );
+});
 
 export const AlertDescription = forwardRef<
   HTMLParagraphElement,
   HTMLAttributes<HTMLParagraphElement>
->(({ className = "", ...props }, ref) => (
-  <div ref={ref} className={`text-sm opacity-90 ${className}`} {...props} />
-));
+>(function AlertDescription({ className = "", ...props }, ref) {
+  return (
+    <div ref={ref} className={`text-sm opacity-90 ${className}`} {...props} />
+  );
+});
