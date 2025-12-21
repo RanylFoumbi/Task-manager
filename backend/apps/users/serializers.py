@@ -54,7 +54,7 @@ class RegisterSerializer(ModelSerializer):
         return value
 
     def validate_password(self, value):
-        if not value or len(value) < 8:
+        if not value or not isinstance(value, str) or len(value) < 8:
             raise serializers.ValidationError(
                 'Assurez-vous que ce champ comporte au moins 8 caractères.',
                 code=ErrorCode.PASSWORD_TOO_SHORT,
@@ -62,7 +62,7 @@ class RegisterSerializer(ModelSerializer):
         return value
 
     def validate_confirm_password(self, value):
-        if not value or len(value) < 8:
+        if not value or not isinstance(value, str) or len(value) < 8:
             raise serializers.ValidationError(
                 'Assurez-vous que ce champ comporte au moins 8 caractères.',
                 code=ErrorCode.PASSWORD_TOO_SHORT,
@@ -102,7 +102,7 @@ class LoginSerializer(serializers.Serializer):
 
     def validate_password(self, value):
         """Valider la longueur du mot de passe"""
-        if not value or len(value) < 8:
+        if not value or not isinstance(value, str) or len(value) < 8:
             raise serializers.ValidationError(
                 'Assurez-vous que ce champ comporte au moins 8 caractères.',
                 code=ErrorCode.PASSWORD_TOO_SHORT,
@@ -159,3 +159,15 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
                 code=ErrorCode.CONFIRM_PASSWORD_NOT_MATCH,
             )
         return attrs
+
+
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField(required=True)
+
+    def validate_refresh(self, value):
+        if not value or not isinstance(value, str) or len(value) == 0:
+            raise serializers.ValidationError(
+                'Le token de rafraîchissement est requis',
+                code=ErrorCode.REFRESH_TOKEN_INVALID,
+            )
+        return value

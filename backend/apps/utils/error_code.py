@@ -34,6 +34,7 @@ class ErrorCode:
     PASSWORD_RESET_SUCCESS = 'PasswordResetSuccess'
     TOKEN_EXPIRED_OR_INVALID = 'TokenExpiredOrInvalid'
     CONFIRM_PASSWORD_NOT_MATCH = 'ConfirmPasswordNotMatch'
+    REFRESH_TOKEN_INVALID = 'RefreshTokenInvalid'
 
 
 

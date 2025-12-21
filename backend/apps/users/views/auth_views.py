@@ -19,6 +19,7 @@ from apps.utils.error_code import ErrorCode
 from ..models import User
 from ..serializers import (
     LoginSerializer,
+    LogoutSerializer,
     RegisterSerializer,
     PublicUserSerializer,
     PasswordResetRequestSerializer,
@@ -151,3 +152,29 @@ class PasswordResetConfirmView(APIView):
             message="Mot de passe réinitialisé avec succès",
             code=ErrorCode.PASSWORD_RESET_SUCCESS
         )
+    
+
+class LogoutView(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = LogoutSerializer
+    
+    def post(self, request):
+        try:
+            serializer = LogoutSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            
+            refresh_token = serializer.validated_data.get('refresh')
+
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+
+            return CustomResponse.success(
+                message="Déconnexion réussie",
+                code=ErrorCode.SUCCESS
+            )
+        except Exception as e:
+            print('>>>>>> Logout error:', e)
+            return CustomResponse.bad_request(
+                message="Échec de la déconnexion",
+                code=ErrorCode.BAD_REQUEST
+            )
