@@ -23,7 +23,10 @@ const DropdownMenuSubTrigger = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubTrigger> & {
     inset?: boolean;
   }
->(function DropdownMenuSubTrigger({ className, inset, children, ...props }, ref) {
+>(function DropdownMenuSubTrigger(
+  { className, inset, children, ...props },
+  ref,
+) {
   return (
     <DropdownMenuPrimitive.SubTrigger
       ref={ref}
@@ -104,7 +107,10 @@ DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName;
 const DropdownMenuCheckboxItem = React.forwardRef<
   React.ComponentRef<typeof DropdownMenuPrimitive.CheckboxItem>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.CheckboxItem>
->(function DropdownMenuCheckboxItem({ className, children, checked, ...props }, ref) {
+>(function DropdownMenuCheckboxItem(
+  { className, children, checked, ...props },
+  ref,
+) {
   return (
     <DropdownMenuPrimitive.CheckboxItem
       ref={ref}

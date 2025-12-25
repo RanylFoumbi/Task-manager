@@ -3,17 +3,16 @@ import { Link } from "react-router-dom";
 import { Loader } from "lucide-react";
 import { Input, Button, Label } from "@/components/ui";
 import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const { login, isLoading } = useAuth();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    console.log("Login attempt with:", { email, password });
-    setIsLoading(false);
+    login({ email, password });
   };
 
   const isFormValid = useCallback(() => {
@@ -42,6 +41,7 @@ export default function LoginPage() {
               value={email}
               disabled={isLoading}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
               error={
                 email.length > 0 && !/\S+@\S+\.\S+/.test(email)
                   ? "Invalid email address."
@@ -68,6 +68,7 @@ export default function LoginPage() {
               value={password}
               disabled={isLoading}
               onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
               error={
                 password.length > 0 && password.length < 6
                   ? "Password must be at least 6 characters."

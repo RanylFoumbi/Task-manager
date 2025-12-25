@@ -23,8 +23,11 @@ export default function RegisterPage() {
     register({
       email,
       password,
+      first_name: firstName,
+      last_name: lastName,
       username: firstName,
       confirm_password: confirmPassword,
+      accept_terms: acceptTerms,
     });
 
     if (error) {
@@ -63,6 +66,7 @@ export default function RegisterPage() {
               value={email}
               disabled={isLoading}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
               error={
                 email.length > 0 && !/\S+@\S+\.\S+/.test(email)
                   ? "Invalid email address."
@@ -82,6 +86,7 @@ export default function RegisterPage() {
                 value={firstName}
                 disabled={isLoading}
                 onChange={(e) => setFirstName(e.target.value)}
+                autoComplete="given-name"
               />
             </div>
             <div className="w-1/2">
@@ -95,6 +100,7 @@ export default function RegisterPage() {
                 value={lastName}
                 disabled={isLoading}
                 onChange={(e) => setLastName(e.target.value)}
+                autoComplete="family-name"
               />
             </div>
           </div>
@@ -109,9 +115,10 @@ export default function RegisterPage() {
               value={password}
               disabled={isLoading}
               onChange={(e) => setPassword(e.target.value)}
+              autoComplete="new-password"
               error={
-                password.length > 0 && password.length < 6
-                  ? "Password must be at least 6 characters."
+                password.length > 0 && password.length < 8
+                  ? "Password must be at least 8 characters."
                   : undefined
               }
             />
@@ -127,6 +134,7 @@ export default function RegisterPage() {
               value={confirmPassword}
               disabled={isLoading}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              autoComplete="new-password"
               error={
                 confirmPassword.length > 0 && confirmPassword !== password
                   ? "Passwords do not match."
@@ -146,7 +154,7 @@ export default function RegisterPage() {
               className="text-sm text-slate-700 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               I agree to the{" "}
-              <Link to="/terms" className="text-slate-900 hover:underline">
+              <Link to="#" className="text-slate-900 hover:underline">
                 terms and conditions
               </Link>
             </label>

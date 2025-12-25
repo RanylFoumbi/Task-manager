@@ -15,8 +15,11 @@ export interface LoginCredentials {
 export interface RegisterData {
   email: string;
   username: string;
+  first_name?: string;
+  last_name?: string;
   password: string;
   confirm_password: string;
+  accept_terms: boolean;
 }
 
 export interface ResetPasswordData {
@@ -32,9 +35,12 @@ export interface ResetPasswordConfirmData {
 export interface AuthResponse {
   code: string;
   success: boolean;
-  access: string;
-  refresh: string;
-  user: User;
+  message: string;
+  data?: {
+    user: User;
+    access?: string;
+    refresh?: string;
+  };
 }
 
 export interface AuthError {

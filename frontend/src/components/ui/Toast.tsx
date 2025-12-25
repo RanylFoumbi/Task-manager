@@ -55,9 +55,7 @@ export const Toast = ({
     >
       <div className="p-4">
         <div className="flex items-start">
-          {icons[variant] && (
-            <div className="shrink-0">{icons[variant]}</div>
-          )}
+          {icons[variant] && <div className="shrink-0">{icons[variant]}</div>}
           <div className={`${icons[variant] ? "ml-3" : ""} flex-1`}>
             {title && (
               <p className="text-sm font-medium text-foreground">{title}</p>

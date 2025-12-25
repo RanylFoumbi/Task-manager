@@ -7,7 +7,7 @@ export const useToast = () => {
   const toast = (
     description: string,
     variant: ToastVariant = "default",
-    duration = 5000
+    duration = 5000,
   ) => {
     addToast({
       description,
@@ -41,4 +41,3 @@ export const useToast = () => {
     remove: removeToast,
   };
 };
-

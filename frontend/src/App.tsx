@@ -20,9 +20,7 @@ function App() {
             </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7 mb-6">
-            {/* Content goes here */}
-          </div>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7 mb-6"></div>
         </main>
       </div>
     </div>

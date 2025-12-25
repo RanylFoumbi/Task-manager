@@ -4,7 +4,7 @@ import type {
   AuthResponse,
   LoginCredentials,
   RegisterData,
-  User
+  User,
 } from "@/types/auth.types";
 
 export const authAPI = {
@@ -23,7 +23,9 @@ export const authAPI = {
     return response.data;
   },
 
-  logout: async (): Promise<void> => {
-    await api.post("/auth/logout/");
+  logout: async (refreshToken: string | null): Promise<void> => {
+    await api.post("/auth/logout/", {
+      refresh: refreshToken,
+    });
   },
 };

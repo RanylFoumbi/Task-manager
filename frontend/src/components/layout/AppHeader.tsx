@@ -9,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenu,
 } from "@/components/ui/Dropdown-menu";
+import { useAuth } from "@/hooks/useAuth";
 
 const menuItems: { label: string; href: string; icon?: React.ReactNode }[] = [
   { label: "Profile", href: "#" },
@@ -21,7 +22,7 @@ export type AppHeaderProps = {
 };
 
 export default function AppHeader({ onToggleSidebar }: AppHeaderProps) {
-  const logout = async () => {};
+  const { logout } = useAuth();
 
   return (
     <header className="bg-white border-b border-slate-200 h-12">
@@ -60,7 +61,7 @@ export default function AppHeader({ onToggleSidebar }: AppHeaderProps) {
               ))}
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={logout}
+                onClick={() => logout()}
                 className="flex justify-between"
               >
                 Logout <LogOut className="ml-2 h-4 w-4" />

@@ -8,9 +8,13 @@ interface AuthState {
   refreshToken: string | null;
   isAuthenticated: boolean;
 
-  setAuth: (user: User, accessToken: string, refreshToken: string) => void;
   logout: () => void;
   updateUser: (user: User) => void;
+  setAuth: (
+    user: User | null,
+    accessToken: string | null,
+    refreshToken: string | null,
+  ) => void;
 }
 
 export const useAuthStore = create<
@@ -24,9 +28,23 @@ export const useAuthStore = create<
       refreshToken: null,
       isAuthenticated: false,
 
-      setAuth: (user: User, accessToken: string, refreshToken: string) => {
-        localStorage.setItem("access_token", accessToken);
-        localStorage.setItem("refresh_token", refreshToken);
+      setAuth: (
+        user: User | null,
+        accessToken: string | null,
+        refreshToken: string | null,
+      ) => {
+        if (accessToken) {
+          localStorage.setItem("access_token", accessToken);
+        } else {
+          localStorage.removeItem("access_token");
+        }
+
+        if (refreshToken) {
+          localStorage.setItem("refresh_token", refreshToken);
+        } else {
+          localStorage.removeItem("refresh_token");
+        }
+
         set({
           user,
           accessToken,

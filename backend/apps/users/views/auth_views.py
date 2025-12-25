@@ -3,7 +3,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.generics import CreateAPIView
 from django.utils.encoding import force_bytes, force_str
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
@@ -155,7 +155,7 @@ class PasswordResetConfirmView(APIView):
     
 
 class LogoutView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     serializer_class = LogoutSerializer
     
     def post(self, request):
@@ -171,6 +171,18 @@ class LogoutView(APIView):
             return CustomResponse.success(
                 message="Déconnexion réussie",
                 code=ErrorCode.SUCCESS
+            )
+        except ValidationError as e:
+            print('>>>>>> Logout validation error:', e)
+            return CustomResponse.bad_request(
+                message="Token invalide",
+                code=ErrorCode.INVALID_TOKEN
+            )
+        except (InvalidToken, TokenError) as e:
+            print('>>>>>> Logout token error:', e)
+            return CustomResponse.bad_request(
+                message="Token invalide ou expiré",
+                code=ErrorCode.TOKEN_EXPIRED_OR_INVALID
             )
         except Exception as e:
             print('>>>>>> Logout error:', e)

@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, type RouteObject } from "react-router";
 import RegisterPage from "./pages/auth/RegisterPage";
 import LoginPage from "./pages/auth/LoginPage";
 import MailConfirmationPage from "./pages/auth/MailConfirmationPage";
@@ -6,12 +6,9 @@ import NotFoundPage from "./pages/NotFoundPage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 import App from "./App";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 
-export const router = createBrowserRouter([
-  {
-    path: "/",
-    Component: App,
-  },
+const publicRoutes: RouteObject[] = [
   {
     path: "login",
     Component: LoginPage,
@@ -32,8 +29,26 @@ export const router = createBrowserRouter([
     path: "reset-password",
     Component: ResetPasswordPage,
   },
+];
+
+const protectedRoutes: RouteObject[] = [
   {
-    path: "*",
-    Component: NotFoundPage,
+    path: "/",
+    Component: () => (
+      <ProtectedRoute>
+        <App />
+      </ProtectedRoute>
+    ),
   },
+];
+
+const notFoundRoute: RouteObject = {
+  path: "*",
+  Component: NotFoundPage,
+};
+
+export const router = createBrowserRouter([
+  ...protectedRoutes,
+  ...publicRoutes,
+  notFoundRoute,
 ]);
