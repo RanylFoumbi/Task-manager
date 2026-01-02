@@ -1,12 +1,13 @@
 import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
-import { Loader } from "lucide-react";
+import { Eye, EyeOff, Loader } from "lucide-react";
 import { Input, Button, Label } from "@/components/ui";
 import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const { login, isLoading } = useAuth();
 
@@ -16,7 +17,7 @@ export default function LoginPage() {
   };
 
   const isFormValid = useCallback(() => {
-    return /\S+@\S+\.\S+/.test(email) && password.length >= 6 && password;
+    return /\S+@\S+\.\S+/.test(email) && password.length >= 8 && password;
   }, [email, password]);
 
   return (
@@ -61,17 +62,24 @@ export default function LoginPage() {
                 Forgot password?
               </Link>
             </div>
+            <div className="absolute right-3 cursor-pointer text-black/50 top-1/2 -translate-y-1/4">
+              {showPassword ? (
+                <Eye onClick={() => setShowPassword(false)} />
+              ) : (
+                <EyeOff onClick={() => setShowPassword(true)} />
+              )}
+            </div>
             <Input
               id="password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="••••••••"
               value={password}
               disabled={isLoading}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
               error={
-                password.length > 0 && password.length < 6
-                  ? "Password must be at least 6 characters."
+                password.length > 0 && password.length < 8
+                  ? "Password must be at least 8 characters."
                   : undefined
               }
             />

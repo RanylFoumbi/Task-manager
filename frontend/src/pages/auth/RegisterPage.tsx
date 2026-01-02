@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button, Checkbox, Input, Label } from "@/components/ui";
 import { useCallback, useState } from "react";
-import { Loader } from "lucide-react";
+import { Eye, EyeOff, Loader } from "lucide-react";
 import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -11,6 +11,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [lastName, setLastName] = useState("");
   const [firstName, setFirstName] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -108,14 +109,21 @@ export default function RegisterPage() {
             <Label htmlFor="password" className="text-slate-900">
               Password
             </Label>
+            <div className="absolute right-3 cursor-pointer text-black/50 top-72">
+              {showPassword ? (
+                <Eye onClick={() => setShowPassword(false)} />
+              ) : (
+                <EyeOff onClick={() => setShowPassword(true)} />
+              )}
+            </div>
             <Input
               id="password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="••••••••"
               value={password}
               disabled={isLoading}
               onChange={(e) => setPassword(e.target.value)}
-              autoComplete="new-password"
+              autoComplete="current-password"
               error={
                 password.length > 0 && password.length < 8
                   ? "Password must be at least 8 characters."
@@ -129,7 +137,7 @@ export default function RegisterPage() {
             </Label>
             <Input
               id="confirm-password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="••••••••"
               value={confirmPassword}
               disabled={isLoading}
