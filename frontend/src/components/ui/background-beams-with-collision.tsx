@@ -114,9 +114,7 @@ const CollisionMechanism = React.forwardRef<
       repeatDelay?: number;
     };
   }
->(function CollisionMechanism(
-  { parentRef, containerRef, beamOptions = {} },
-) {
+>(function CollisionMechanism({ parentRef, containerRef, beamOptions = {} }) {
   const beamRef = useRef<HTMLDivElement>(null);
   const [collision, setCollision] = useState<{
     detected: boolean;
